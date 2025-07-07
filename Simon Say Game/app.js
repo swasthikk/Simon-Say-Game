@@ -5,11 +5,16 @@ let started = false;
 let level = 0;
 
 let h4 = document.querySelector("h4");
+let scoreDisplay = document.querySelector("#score");
 
 document.addEventListener("keypress", function () {
     if (!started) {
-        console.log("Game Started");
         started = true;
+        level = 0;
+        gameseq = [];
+        userseq = [];
+        h4.innerText = "LEVEL 0";
+        scoreDisplay.innerText = "Score: 0";
         levelUp();
     }
 });
@@ -29,27 +34,29 @@ function userflash(btn) {
 }
 
 function levelUp() {
-    userseq = []; // reset user sequence
+    userseq = []; // Clear user input for new level
     level++;
     h4.innerText = `LEVEL ${level}`;
-    
+    scoreDisplay.innerText = `Score: ${level - 1}`;
+
     let randIdx = Math.floor(Math.random() * 4);
     let randColor = btns[randIdx];
     let randbtn = document.querySelector(`.${randColor}`);
-    
+
     gameseq.push(randColor);
-    console.log("Game sequence:", gameseq);
     gameflash(randbtn);
 }
 
 function checkAns(idx) {
     if (userseq[idx] === gameseq[idx]) {
         if (userseq.length === gameseq.length) {
-            setTimeout(levelUp, 1000); // move to next level
+            setTimeout(levelUp, 1000);
         }
     } else {
-        h4.innerText = `Game Over! Press any key to restart.`;
+        h4.innerText = `❌ Game Over! You reached Level ${level}. Press any key to restart.`;
+        scoreDisplay.innerText = `Final Score: ${level - 1}`;
         document.body.classList.add("game-over");
+
         setTimeout(() => {
             document.body.classList.remove("game-over");
         }, 200);
